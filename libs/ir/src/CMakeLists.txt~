@@ -1,0 +1,3 @@
+add_library (ir STATIC instructions.cpp cfa.cpp)
+target_link_libraries(ir PUBLIC components)
+target_include_directories (ir PUBLIC ${PROJECT_SOURCE_DIR}/include)

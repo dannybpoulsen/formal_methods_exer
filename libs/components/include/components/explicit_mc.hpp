@@ -1,0 +1,72 @@
+#include "components/state.hpp"
+#include "components/transfer.hpp"
+
+namespace components {
+  template <>
+  struct Ops<std::int8_t> {
+    static std::int8_t Add(const std::int8_t &l, const std::int8_t &r);
+    
+    static std::int8_t Sub(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Div(const std::int8_t &l, const std::int8_t &r);
+    
+    static std::int8_t SDiv(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Mul(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t SLEq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t LEq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t SGEq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t GEq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t SLt(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Lt(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t SGt(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Gt(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Eq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t NEq(const std::int8_t &l, const std::int8_t &r);
+
+    static std::int8_t Negation(const std::int8_t &t);
+
+    static std::int8_t Minus(const std::int8_t &t);
+    static std::int8_t symbolise(const std::int8_t t) {return t;}
+    static std::int8_t default_val() {return 0;}
+    
+    
+    static std::generator<std::int8_t> undef();
+    
+  };
+  
+  namespace explic {
+
+    using State = components::State<std::int8_t>;
+
+    class Evaluator : public components::ExprEvaluator<std::int8_t> {
+    public:
+      Evaluator (const State& s) : ExprEvaluator (s) {}
+      std::generator<std::int8_t> visitDerefExpr (const IR::DerefExpr& r) override;
+      
+    };
+
+    class Transfer : public components::Transfer<std::int8_t,Evaluator> {
+    public:
+      std::generator<State> visitAssume (const IR::Assume& s) override;
+      std::generator<State> visitStore (const IR::Store&) override;
+      
+    };
+
+    
+    
+    using StatePrinter = components::StatePrinter<std::int8_t>;
+    
+    
+  }
+} // namespace components

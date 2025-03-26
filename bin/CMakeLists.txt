@@ -1,0 +1,27 @@
+add_executable (wh2cfa whiley2cfa.cpp)
+target_link_libraries(wh2cfa PUBLIC stdcomponents whiley ir compiler)
+
+
+add_executable (wh2cfa_student whiley2cfa.cpp)
+target_link_libraries(wh2cfa_student PUBLIC stdcomponents whiley ir compiler_student explicit )
+
+
+add_executable (explicit_mc explicit_mc.cpp)
+target_link_libraries(explicit_mc PUBLIC stdcomponents whiley ir compiler explicit)
+target_compile_definitions(explicit_mc PUBLIC SOLUTION)
+
+add_executable (explicit_mc_student explicit_mc.cpp)
+target_link_libraries(explicit_mc_student PUBLIC stdcomponents compiler whiley ir explicit_student)
+
+add_subdirectory(interpreter)
+
+add_executable (interpreterl interpreter.cpp)
+target_link_libraries(interpreterl PUBLIC stdcomponents compiler whiley ir explicit simulator)
+
+add_executable (interpreter_uninit interpreter_uninit.cpp)
+target_link_libraries(interpreter_uninit PUBLIC stdcomponents compiler whiley ir uninit  simulator)
+
+target_link_libraries(interpreterl PUBLIC stdcomponents compiler whiley ir explicit simulator)
+
+add_executable (interpreter_uninit_student interpreter_uninit.cpp)
+target_link_libraries(interpreter_uninit_student PUBLIC stdcomponents compiler whiley ir uninit_student  simulator)

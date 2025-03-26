@@ -1,0 +1,94 @@
+#include "components/state.hpp"
+#include "components/transfer.hpp"
+
+#include <utility>
+
+namespace uninit {
+  enum class Values {
+    Initialised  = 5,
+    Uninitialised = 10
+  };
+
+  Values join (Values l, Values r); 
+  
+  inline std::ostream& operator<< (std::ostream& os, const Values& v) {
+    switch (v) {
+    case Values::Uninitialised:
+      return os << "⚡";
+    case Values::Initialised:
+      return os << "✓";
+    default:
+      std::unreachable();
+    }
+  }
+  
+}
+
+namespace components {
+  template <>
+  struct Ops<uninit::Values> {
+    static uninit::Values Add(const uninit::Values &l, const uninit::Values &r);
+    
+    static uninit::Values Sub(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Div(const uninit::Values &l, const uninit::Values &r);
+    
+    static uninit::Values SDiv(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Mul(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values SLEq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values LEq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values SGEq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values GEq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values SLt(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Lt(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values SGt(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Gt(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Eq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values NEq(const uninit::Values &l, const uninit::Values &r);
+
+    static uninit::Values Negation(const uninit::Values &t);
+
+    static uninit::Values Minus(const uninit::Values &t);
+    static uninit::Values symbolise(const std::int8_t);
+    
+    static std::generator<uninit::Values> undef();
+    static uninit::Values default_val() {return uninit::Values::Uninitialised;}
+    
+  };
+
+}
+namespace uninit {
+
+    using State = components::State<uninit::Values>;
+
+    class Evaluator : public components::ExprEvaluator<uninit::Values> {
+    public:
+      Evaluator (const State& s) : ExprEvaluator (s) {}
+      std::generator<uninit::Values> visitDerefExpr (const IR::DerefExpr& r) override;
+      
+    };
+
+    class Transfer : public components::Transfer<Values,Evaluator> {
+    public:
+      std::generator<State> visitAssume (const IR::Assume& s) override;
+      std::generator<State> visitStore (const IR::Store&) override;
+      
+    };
+  
+  
+    
+    using StatePrinter = components::StatePrinter<std::int8_t>;
+    
+    
+} // namespace components

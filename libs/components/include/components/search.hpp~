@@ -1,0 +1,92 @@
+#include "ir/cfa.hpp"
+#include "components/state.hpp"
+#include <optional>
+#include <functional>
+#include <unordered_map>
+#include <vector>
+#include <list>
+#include <stack>
+
+namespace components {
+
+  
+  
+  template<Value V>
+  using Predicate = std::function<bool(const State<V>&)>;
+  template<Value V,class Transfer>
+  class Reachability {
+  public:
+    Reachability (Transfer&& f) : transfer(std::move(f)) {}
+    std::optional<State<V>> search (State<V>&, Predicate<V> );
+    std::list<State<V> > buildTraceTo (const State<V>&, const State<V>&);
+  private:
+    std::unordered_set<std::size_t> visited;
+    Transfer transfer;
+  };
+  
+  template<Value V,class Transfer>
+  inline std::optional<State<V>> Reachability<V,Transfer>::search (State<V>& init, Predicate<V> pred) {
+    std::vector<State<V>> waiting;
+    visited.clear();
+    auto addState = [&waiting,this](const State<V>& s) {
+      auto hash = s.hash ();
+      if (!visited.count(hash)) {
+	visited.insert(hash);
+	waiting.push_back(s);
+      }
+    };
+    
+    addState(init);
+    while (waiting.size()) {
+      State<V> state = waiting.back();
+      waiting.pop_back();
+      if (pred(state))
+      {
+	return state;
+      }
+      else {
+	for (auto s : transfer(state)) {
+	  addState(s);
+
+	}
+      }
+    }
+    
+    return std::nullopt;
+  }
+
+  template<Value V,class Transfer>
+  inline std::list<State<V>> Reachability<V,Transfer>::buildTraceTo (const State<V>& from, const State<V>& goal) {
+    std::list<State<V>> trace;
+    std::unordered_set<std::size_t> explored;
+    trace.emplace_back (from);
+    while (trace.size()) {
+      auto state = trace.back();
+      if (explored.count(state.hash ())) {
+	//We are done exploring for this state
+	trace.pop_back();
+      }
+      else if (state.hash() == goal.hash ()) {
+	//Found the goal
+	return trace;
+      }
+      else {
+	bool succ = false;
+	for (auto s : transfer (state)) {
+	  if (!explored.count(s.hash()) && visited.count(s.hash())) {
+	    succ = true;
+	    trace.push_back(s);
+	    break;
+	  }
+	    
+	}
+	if (!succ) {
+	  explored.insert(state.hash());
+	}
+	  
+      }
+    }
+    throw std::runtime_error ("Trace Generation Failed");
+  }
+  
+}

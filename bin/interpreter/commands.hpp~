@@ -1,0 +1,64 @@
+#ifndef _COMMANDS__
+#define _COMMANDS__
+
+
+#include <memory>
+
+namespace MiniMC {
+  namespace Simulator {
+    class ShowStateCommand : public Command{
+    public:
+      bool execute (Simulator* simu) override {
+      }
+    
+    };
+
+    
+    class StartSimulation : public Command{
+    public:
+      StartSimulation ()  {}
+      bool execute (Simulator* simu) override {}
+      
+    };
+    
+    class StepSimulation : public Command{
+    public:
+      StepSimulation ()   {}
+      bool execute (Simulator* simu) override {
+	return true;
+      }
+    
+    };
+    
+    class CommandBuilder {
+    public:
+      CommandBuilder ()  {}
+      void startSimulation () {
+	cmd = std::make_unique<StartSimulation> ();
+      }
+
+      void showState () {
+	cmd = std::make_unique<ShowStateCommand> ();
+      }
+
+      
+      
+      void step () {
+	cmd = std::make_unique<StepSimulation> ();
+      }
+
+      void skip () {
+	cmd = std::make_unique<Command> ();
+      }
+      
+      auto get() {return std::move(cmd);}
+      
+    private:
+      std::unique_ptr<Command> cmd {nullptr};
+    };
+    
+  }
+}
+
+
+#endif

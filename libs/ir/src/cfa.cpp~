@@ -1,0 +1,51 @@
+#include "ir/cfa.hpp"
+
+#include <unordered_set>
+#include <vector>
+
+
+namespace IR {
+  struct EdgeS {
+    EdgeS (IR::Location_ptr f, const IR::Edge* edge) : from(f),edge(edge) {}
+    IR::Location_ptr from;
+    const IR::Edge* edge;
+  };
+  
+  std::ostream& operator<< (std::ostream& os , const CFA& cfa) {
+    std::vector<IR::Location_ptr> visited;
+    std::vector<IR::Location_ptr> waiting;
+    std::vector<EdgeS> edges;
+    
+    auto addLocation = [&visited,&waiting](IR::Location_ptr loc) {
+      if (std::find(visited.begin(),visited.end(),loc) == visited.end()) {
+	visited.push_back(loc);
+	waiting.push_back(loc);
+      }
+    };
+
+    addLocation (cfa.getInitial ());
+    while (waiting.size()) {
+      auto cur = waiting.back();
+      waiting.pop_back();
+
+      for (const auto& e : cur->edges()) {
+	edges.emplace_back (cur,&e);
+	addLocation(e.getTo ());
+      }
+      
+    }
+
+    for (auto& l : visited) {
+      os << "Location " <<  l->getName() << "\n";
+    }
+
+    for (auto& e : edges) {
+      os << "Edge: " <<  e.from->getName() << " ----" << *(e.edge->getInstruction()) << " --->  "  << e.edge->getTo ()->getName()  << "\n";
+    }
+
+    return os;
+    
+    
+  }
+    
+}
