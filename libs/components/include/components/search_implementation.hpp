@@ -9,6 +9,7 @@ inline std::optional<State<V>> Reachability<V,Transfer>::search (State<V>& init,
       waiting.push_back(s);
     }
   };
+
   
   addState(init);
   while (waiting.size()) {

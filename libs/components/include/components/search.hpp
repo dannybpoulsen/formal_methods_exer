@@ -42,10 +42,13 @@ namespace components {
   inline std::list<TraceData<V>> Reachability<V,Transfer>::buildTraceTo (const State<V>& from, const State<V>& goal) {
     std::list<TraceData<V>> trace;
     std::unordered_set<std::size_t> explored;
+    std::unordered_set<std::size_t> on_stack;
+    
     trace.emplace_back (from);
+    on_stack.insert(from.hash());
     while (trace.size()) {
       auto state = trace.back();
-      if (explored.count(state.state.hash ())) {
+      if ( explored.count(state.state.hash ())) {
 	//We are done exploring for this state
 	trace.pop_back();
       }
@@ -57,16 +60,20 @@ namespace components {
 	bool succ = false;
 	for (auto& e : state.state.getLocation()->edges()) {
 	  for (auto s : transfer (state.state,e)) {
-	    if (!explored.count(s.hash()) && visited.count(s.hash())) {
+	    if (!explored.count(s.hash()) && !on_stack.count(s.hash()) && visited.count(s.hash())) {
 	      succ = true;
 	      trace.back().edge = &e;
 	      trace.push_back(s);
+	      on_stack.insert(s.hash());
 	      break;
 	    }
 	    
 	  }
+	  if (succ)
+	    break;
 	}
 	if (!succ) {
+	  trace.back().edge = nullptr;
 	  explored.insert(state.state.hash());
 	}
 	  

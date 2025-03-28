@@ -88,7 +88,7 @@ namespace uninit {
   
   
     
-    using StatePrinter = components::StatePrinter<std::int8_t>;
+    using StatePrinter = components::StatePrinter<Values>;
     
     
 } // namespace components

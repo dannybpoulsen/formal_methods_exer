@@ -25,3 +25,11 @@ target_link_libraries(interpreterl PUBLIC stdcomponents compiler whiley ir expli
 
 add_executable (interpreter_uninit_student interpreter_uninit.cpp)
 target_link_libraries(interpreter_uninit_student PUBLIC stdcomponents compiler whiley ir uninit_student  simulator)
+
+
+add_executable (uninit_ai uninit_ai.cpp)
+target_link_libraries(uninit_ai PUBLIC stdcomponents whiley ir compiler uninit)
+target_compile_definitions(uninit_ai PUBLIC SOLUTION)
+
+add_executable (uninit_ai_student uninit_ai.cpp)
+target_link_libraries(uninit_ai_student PUBLIC stdcomponents compiler whiley ir uninit_student)
