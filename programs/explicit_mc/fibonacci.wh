@@ -1,0 +1,21 @@
+si8 i;
+si8 j;
+si8 tmp;
+si8 counter;
+
+i = 0;
+j = 1;
+counter = ?;
+
+assume(counter == 10);
+
+while (counter > 0) {
+    tmp = j;
+    j = i+j;
+    i = tmp;
+    counter = counter - 1;
+}
+
+#(0 as ui8) = j;
+
+assert(0 == 1);

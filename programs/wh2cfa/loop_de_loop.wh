@@ -1,0 +1,23 @@
+ui8 counter;
+ui8 secondcounter;
+si8 dd;
+
+counter = (? as ui8);
+while (counter > 0) {
+      secondcounter = (? as ui8);
+       counter = counter - (1 as ui8);
+      while (secondcounter > 0) {
+       	    secondcounter = secondcounter  - (1 as ui8);
+	    if (dd == (0 as ui8)) {
+	       dd = 1;
+	    }
+
+	    else {
+	    	 dd = dd + 1; 
+	    }	    
+      }
+
+      if (dd == 0) {
+      	 counter = (? as ui8);
+      }
+}

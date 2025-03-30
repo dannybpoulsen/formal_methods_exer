@@ -23,6 +23,7 @@ int main (int argc, char** argv) {
 	components::explic::StatePrinter printer {std::cout,cfa};
 	
 	auto predicate = [&printer](const components::explic::State& s) {
+	  printer << s;
 	  if (s.getLocation()->isAssert ()) {
 	    return true;
 	  }

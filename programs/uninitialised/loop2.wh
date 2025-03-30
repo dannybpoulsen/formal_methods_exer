@@ -1,0 +1,15 @@
+si8 hh;
+si8 kk;
+
+hh = ?;
+
+while (hh > 0) {
+        hh = hh - 1;
+}
+
+if (hh == 0) {
+   kk = 10;
+}
+
+
+assert(kk == 10);

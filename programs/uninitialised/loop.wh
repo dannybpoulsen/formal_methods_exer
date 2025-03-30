@@ -1,0 +1,8 @@
+si8 hh;
+
+
+while (hh > 0) {
+        hh = hh - 1;
+}
+
+assert(hh == 0);
