@@ -39,6 +39,11 @@ namespace components {
       _internal->expr = std::make_shared<IR::DerefExpr> (_internal->expr);
     }
 
+    void Compiler::visitUndefExpression (const UndefExpression& num) {
+      _internal->expr = std::make_shared<IR::Undef> ();
+    }
+  
+  
     void Compiler::visitCastExpression (const CastExpression& num) {
       num.getExpression ().accept (*this);
       //_internal->expr = std::make_shared<IR::DerefExpr> (_internal->expr);
@@ -111,7 +116,7 @@ namespace components {
       _internal->start->addEdge (std::make_shared<IR::Assign> (reg,_internal->expr),end);
       _internal->end = end;
     }
-
+  
     void Compiler::visitAssertStatement (const AssertStatement& ass) {
       
       ass.getExpression ().accept(*this);
@@ -137,15 +142,6 @@ namespace components {
       //_internal->start->setName (static_cast<std::string> (ass.getFileLocation ()));
       _internal->start->addEdge (std::make_shared<IR::Assume> (expr),nloc);
       _internal->end = nloc;
-    }
-    
-    void Compiler::visitNonDetAssignStatement (const NonDetAssignStatement& ass) {
-      auto reg = _internal->vars.at (ass.getAssignName ());
-      auto end = _internal->cfa.makeLocation ("",false);
-      //_internal->start->setName (static_cast<std::string> (ass.getFileLocation ()));
-      
-      _internal->start->addEdge (std::make_shared<IR::Assign> (reg,std::make_shared<IR::Undef> ()),end);
-      _internal->end = end;
     }
     
     void Compiler::visitIfStatement (const IfStatement& ifs ) {

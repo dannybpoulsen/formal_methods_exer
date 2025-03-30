@@ -47,6 +47,11 @@ void Compiler::visitBinaryExpression(const BinaryExpression &be) {
   throw NotSolvedYet{__FILE__};
 }
 
+void Compiler::visitUndefExpression (const UndefExpression& num) {
+    throw NotSolvedYet{__FILE__};
+}
+ 
+  
 void Compiler::visitAssignStatement(const AssignStatement &ass) {
   throw NotSolvedYet{__FILE__};
 }
@@ -56,10 +61,6 @@ void Compiler::visitAssertStatement(const AssertStatement &ass) {
 }
 
 void Compiler::visitAssumeStatement(const AssumeStatement &ass) {
-  throw NotSolvedYet{__FILE__};
-}
-
-void Compiler::visitNonDetAssignStatement(const NonDetAssignStatement &ass) {
   throw NotSolvedYet{__FILE__};
 }
 
